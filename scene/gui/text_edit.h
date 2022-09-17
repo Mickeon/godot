@@ -512,6 +512,10 @@ private:
 
 	void _update_gutter_width();
 
+	// Gradients
+	Ref<GradientTexture1D> gradient_texture;
+	Ref<Gradient> gradient;
+
 	/* Syntax highlighting. */
 	Ref<SyntaxHighlighter> syntax_highlighter;
 

@@ -874,6 +874,21 @@ void TextEdit::_notification(int p_what) {
 				bottom_limit_y -= style_normal->get_margin(SIDE_BOTTOM);
 			}
 
+			/*RenderingServer::get_singleton()->canvas_item_add_texture_rect(
+				ci,
+				Rect2(64, 64, gradient_texture->get_width() + 2, 256.0),
+				gradient_texture->get_rid(),
+				true);*/
+
+			/*RenderingServer::get_singleton()->canvas_item_add_lcd_texture_rect_region(
+				ci,
+				Rect2(64, 300, gradient_texture->get_width() + 2, 256.0),
+				gradient_texture->get_rid(),
+				Rect2(0, 0, gradient_texture->get_width() + 2, 1)
+			);*/
+
+			//gradient_texture->draw(ci, Point2(100, 100));
+
 			// Draw main text.
 			caret.visible = false;
 			line_drawing_cache.clear();
@@ -1430,6 +1445,20 @@ void TextEdit::_notification(int p_what) {
 					line_drawing_cache[line] = cache_entry;
 				}
 			}
+
+			RenderingServer::get_singleton()->canvas_item_add_texture_rect(
+					ci,
+					Rect2(0, 0, MIN(xmargin_beg + h_scroll->get_value(), gradient_texture->get_width()), 256.0),
+					gradient_texture->get_rid(),
+					true
+			);
+
+			//get_total_gutter_width()
+
+			/*WARN_PRINT(vformat(
+				"Total points: %d | ColorStart: %s, ColorEnd: %s",
+				gradient->get_points_count(),
+				gradient->get_color(0), gradient->get_color(1)));*/
 
 			if (has_focus()) {
 				if (get_viewport()->get_window_id() != DisplayServer::INVALID_WINDOW_ID && DisplayServer::get_singleton()->has_feature(DisplayServer::FEATURE_IME)) {
@@ -6798,4 +6827,22 @@ TextEdit::TextEdit(const String &p_placeholder) {
 	set_placeholder(p_placeholder);
 
 	set_editable(true);
+
+	// Gradients
+	gradient_texture.instantiate();
+	gradient.instantiate();
+
+	gradient_texture->set_width(256);
+	//gradient_texture->set_height(512);
+	//gradient_texture->set_repeat(GradientTexture2D::REPEAT);
+	//gradient_texture->set_fill_from(Vector2(50, 10));
+	//gradient_texture->set_fill_to(Vector2(192, 10));
+
+	gradient->set_color(0, Color(0.2, 0.8, 1.0, 1));
+	gradient->set_color(1, Color(0.1, 0.75, 1.0, 0.0));
+	gradient->set_offset(0, 0.33);
+	gradient->set_offset(1, 0.95);
+	//gradient->add_point(0, Color(1, 0.2, 0.0));
+	//gradient->add_point(1, Color(0.5, 0.75, 1, 0.0));
+	gradient_texture->set_gradient(gradient);
 }
