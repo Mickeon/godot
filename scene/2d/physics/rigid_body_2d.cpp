@@ -30,6 +30,8 @@
 
 #include "rigid_body_2d.h"
 
+#include "core/config/project_settings.h"
+
 void RigidBody2D::_body_enter_tree(ObjectID p_id) {
 	Object *obj = ObjectDB::get_instance(p_id);
 	Node *node = Object::cast_to<Node>(obj);
@@ -643,8 +645,8 @@ PackedStringArray RigidBody2D::get_configuration_warnings() const {
 
 	PackedStringArray warnings = PhysicsBody2D::get_configuration_warnings();
 
-	if (ABS(t.columns[0].length() - 1.0) > 0.05 || ABS(t.columns[1].length() - 1.0) > 0.05) {
-		warnings.push_back(RTR("Size changes to RigidBody2D will be overridden by the physics engine when running.\nChange the size in children collision shapes instead."));
+	if ((ABS(t.columns[0].length() - 1.0) > 0.05 || ABS(t.columns[1].length() - 1.0) > 0.05) && GLOBAL_GET(PhysicsServer2DManager::setting_property_name) == "GodotPhysics2D") {
+		warnings.push_back(RTR("Scale changes to RigidBody2D will be overridden by Godot Physics when running the project.\nChange the scale in children collision shapes instead."));
 	}
 
 	return warnings;

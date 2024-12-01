@@ -30,6 +30,8 @@
 
 #include "rigid_body_3d.h"
 
+#include "core/config/project_settings.h"
+
 void RigidBody3D::_body_enter_tree(ObjectID p_id) {
 	Object *obj = ObjectDB::get_instance(p_id);
 	Node *node = Object::cast_to<Node>(obj);
@@ -662,8 +664,8 @@ PackedStringArray RigidBody3D::get_configuration_warnings() const {
 	PackedStringArray warnings = PhysicsBody3D::get_configuration_warnings();
 
 	Vector3 scale = get_transform().get_basis().get_scale();
-	if (ABS(scale.x - 1.0) > 0.05 || ABS(scale.y - 1.0) > 0.05 || ABS(scale.z - 1.0) > 0.05) {
-		warnings.push_back(RTR("Scale changes to RigidBody3D will be overridden by the physics engine when running.\nPlease change the size in children collision shapes instead."));
+	if ((ABS(scale.x - 1.0) > 0.05 || ABS(scale.y - 1.0) > 0.05 || ABS(scale.z - 1.0) > 0.05) && GLOBAL_GET(PhysicsServer3DManager::setting_property_name) == "GodotPhysics3D") {
+		warnings.push_back(RTR("Scale changes to RigidBody3D will be overridden by Godot Physics when running the project.\nChange the scale in children collision shapes instead."));
 	}
 
 	return warnings;
